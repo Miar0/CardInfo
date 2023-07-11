@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load core_tags %}
+
+{% block content %}
+<div class="container ">
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <div class="nav">
+                    <h4>Series:&nbsp</h4>
+                    <h4 class="text-uppercase text-decoration-underline">{{ object.series }}</h4>
+                </div>
+                <div class="text-end">
+                    <a href="./delete/" class="btn btn-danger me-3">Delete card</a>
+                    <a href="./edit/" class="btn btn-warning">Edit card</a>
+                </div>
+            </div>
+            <div class="nav">
+                <h5>Number:&nbsp</h5>
+                <h5 class="text-decoration-underline">{{ object.number|dividing_numbers }}</h5>
+            </div>
+            <div class="nav">
+                <h5>CVV:&nbsp</h5>
+                <h5 class="text-decoration-underline">{{ object.cvv }}</h5>
+            </div>
+            <div class="nav">
+                <p>Card release date:&nbsp</p>
+                <p class="text-decoration-underline">{{ object.release_date|time_conversion }}</p>
+            </div>
+            <div class="nav">
+                <p>Date activity end:&nbsp</p>
+                <p class="text-decoration-underline">{{ object.end_date|time_conversion }}</p>
+            </div>
+            <div class="d-flex justify-content-between">
+                <div class="nav">
+                    <p>Funds:&nbsp</p>
+                    <p class="text-decoration-underline">{{ object.funds }} UAH</p>
+                </div>
+                <div class="text-end nav">
+                    <p>Status:&nbsp</p>
+                    <p class="text-decoration-underline me-4 {{ object.status|status_color }}">{{ object.status.capitalize }}</p>
+                    <form method="post">{% csrf_token %}
+                        {% if object.status.capitalize == 'Active' %}
+                        <button type="submit" class="btn btn-warning">Deactivate</button>
+                        {% elif object.status.capitalize == 'Inactive' %}
+                        <button type="submit" class="btn btn-success">Activate</button>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+
+        </div>
+        <div class="card-footer">
+            <h4>History</h4>
+            {% for purchase in purchases %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="nav">
+                            <h4>Address:&nbsp</h4>
+                            <h4>{{ purchase.address }}</h4>
+                        </div>
+                        <div class="nav">
+                            <h5>Price:&nbsp</h5>
+                            <h5 class="{{ purchase.price|price_color }}">{{ purchase.price|price_plus }}&nbsp</h5>
+                            <h5>UAH</h5>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div>
+                            <h6>Title:</h6>
+                            <h6>{{ purchase.title }}</h6>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
